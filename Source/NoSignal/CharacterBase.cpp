@@ -18,6 +18,16 @@ void ACharacterBase::BeginPlay()
 	
 }
 
+void ACharacterBase::MoveForward(float axis)
+{
+	this->AddMovementInput(FVector(1, 0, 0), axis);
+}
+
+void ACharacterBase::MoveRight(float axis)
+{
+	this->AddMovementInput(FVector(0, 1, 0), axis);
+}
+
 // Called every frame
 void ACharacterBase::Tick(float DeltaTime)
 {
@@ -30,5 +40,6 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis("MoveForward", this, &ACharacterBase::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ACharacterBase::MoveRight);
 }
-
