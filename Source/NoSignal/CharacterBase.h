@@ -6,26 +6,43 @@
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
+class UCameraComponent;
+
 UCLASS()
 class NOSIGNAL_API ACharacterBase : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
+
 	ACharacterBase();
 
+
 protected:
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 
+	// Input callbacks.
 	void MoveForward(float axis);
 	void MoveRight(float axis);
+	void BeginSprint();
+	void EndSprint();
 
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
+public:
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TObjectPtr<UCameraComponent> cameraComponent;
+
+private:
+
+	UPROPERTY(EditAnywhere)
+	float WalkSpeed;
+
+	UPROPERTY(EditAnywhere)
+	float RunSpeed;
 };

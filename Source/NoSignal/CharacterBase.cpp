@@ -3,29 +3,50 @@
 
 #include "CharacterBase.h"
 
+#include <Engine/Classes/Camera/CameraComponent.h>
+#include <Engine/Classes/Components/CapsuleComponent.h>
+#include <Engine/Classes/GameFramework/CharacterMovementComponent.h>
+
 // Sets default values
 ACharacterBase::ACharacterBase()
+	: WalkSpeed(200.0F), RunSpeed(800.0F)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	cameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
+	cameraComponent->SetupAttachment(GetCapsuleComponent());
+	cameraComponent->bUsePawnControlRotation = true;
+
+	this->GetCharacterMovement()->BrakingDecelerationWalking = 128.0F;
+	this->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
 // Called when the game starts or when spawned
 void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void ACharacterBase::MoveForward(float axis)
 {
-	this->AddMovementInput(FVector(1, 0, 0), axis);
+	AddMovementInput(GetActorForwardVector(), axis);
 }
 
 void ACharacterBase::MoveRight(float axis)
 {
-	this->AddMovementInput(FVector(0, 1, 0), axis);
+	AddMovementInput(GetActorRightVector(), axis);
+}
+
+void ACharacterBase::BeginSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+}
+
+void ACharacterBase::EndSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
 // Called every frame
@@ -42,4 +63,11 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACharacterBase::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACharacterBase::MoveRight);
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ACharacterBase::BeginSprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ACharacterBase::EndSprint);
+
+	PlayerInputComponent->BindAxis("Turn", this, &ACharacter::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("LookUp", this, &ACharacter::AddControllerPitchInput);
+
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 }
