@@ -18,6 +18,9 @@ ACharacterBase::ACharacterBase()
 	cameraComponent->SetupAttachment(GetCapsuleComponent());
 	cameraComponent->bUsePawnControlRotation = true;
 
+	lightAwareEntityComponent = CreateDefaultSubobject<UNS_LightAwareEntity>("LightAwareEntity");
+	AddOwnedComponent(lightAwareEntityComponent);
+
 	this->GetCharacterMovement()->BrakingDecelerationWalking = 128.0F;
 	this->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
@@ -53,7 +56,7 @@ void ACharacterBase::EndSprint()
 void ACharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 
 // Called to bind functionality to input
@@ -70,4 +73,8 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("LookUp", this, &ACharacter::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+}
+
+void ACharacterBase::UpdateStressAmount(float dt)
+{
 }
