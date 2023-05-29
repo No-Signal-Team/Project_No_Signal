@@ -17,6 +17,10 @@ public:
 	
 	int GetNbLightsInSight() const { return LightsInSight.Num(); }
 
+	void AddLightInSight(AActor* Light) { LightsInSight.Add(Light); }
+
+	void RemoveLightInSight(AActor* Light) { LightsInSight.Remove(Light); }
+
 	void UpdateState();
 
 protected:

@@ -18,8 +18,11 @@ ACharacterBase::ACharacterBase()
 	cameraComponent->SetupAttachment(GetCapsuleComponent());
 	cameraComponent->bUsePawnControlRotation = true;
 
-	lightAwareEntityComponent = CreateDefaultSubobject<UNS_LightAwareEntity>("LightAwareEntity");
-	AddOwnedComponent(lightAwareEntityComponent);
+	LightAwareEntityComponent = CreateDefaultSubobject<UNS_LightAwareEntity>("LightAwareEntity");
+	AddOwnedComponent(LightAwareEntityComponent);
+
+	StressInfluencedEntityComponent = CreateDefaultSubobject<UNS_StressInfluencedEntity>("StressInfluencedEntity");
+	AddOwnedComponent(StressInfluencedEntityComponent);
 
 	this->GetCharacterMovement()->BrakingDecelerationWalking = 128.0F;
 	this->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
@@ -56,6 +59,10 @@ void ACharacterBase::EndSprint()
 void ACharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	UE_LOG(LogTemp, Warning, TEXT("Lights in sight: %i"), LightAwareEntityComponent->GetNbLightsInSight());
+	UpdateStressAmount(DeltaTime);
+	UpdateStressState();
 	
 }
 
@@ -77,4 +84,12 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ACharacterBase::UpdateStressAmount(float dt)
 {
+	float stressFactor = 1 - LightAwareEntityComponent->GetNbLightsInSight() * 0.1F;
+	
+}
+
+void ACharacterBase::UpdateStressState()
+{
+	// cameraComponent->PostProcessSettings.bOverride_SceneFringeIntensity = true;
+	cameraComponent->PostProcessSettings.SceneFringeIntensity += StressInfluencedEntityComponent->GetStressAmount();
 }

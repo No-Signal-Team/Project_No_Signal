@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Player/NS_LightAwareEntity.h"
-#include "UObject/UnrealTypePrivate.h"
+#include "Player/NS_StressInfluencedEntity.h"
 #include "CharacterBase.generated.h"
 
 class UCameraComponent;
@@ -36,6 +36,7 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void UpdateStressAmount(float dt);
+	void UpdateStressState();
 
 
 public:
@@ -44,7 +45,10 @@ public:
 	TObjectPtr<UCameraComponent> cameraComponent;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TObjectPtr<UNS_LightAwareEntity> lightAwareEntityComponent;
+	TObjectPtr<UNS_LightAwareEntity> LightAwareEntityComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TObjectPtr<UNS_StressInfluencedEntity> StressInfluencedEntityComponent;
 	
 private:
 
