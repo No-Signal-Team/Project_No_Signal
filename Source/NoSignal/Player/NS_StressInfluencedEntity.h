@@ -19,6 +19,10 @@ public:
 
 	void ResetStress() { StressAmount = 0.f; }
 
+protected:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stress")
+	USoundBase* StressSound;
+
 private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Stress")

@@ -1,8 +1,12 @@
 ﻿#include "NS_StressInfluencedEntity.h"
 
+#include "Kismet/GameplayStatics.h"
+
 void UNS_StressInfluencedEntity::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UGameplayStatics::PlaySound2D(GetWorld(), StressSound, StressAmount);
 	
 }
 
