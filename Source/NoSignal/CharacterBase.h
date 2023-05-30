@@ -35,7 +35,7 @@ protected:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void UpdateStressAmount(float dt);
+	void UpdateStressAmount(const float Dt);
 	void UpdateStressState();
 
 
@@ -58,4 +58,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	float RunSpeed;
 
+	const float MaxStressFactor = 0.01F;
+	const float MinStressFactor = -0.03F;
+	const float MaxAberration = 5.F;
+	
 };

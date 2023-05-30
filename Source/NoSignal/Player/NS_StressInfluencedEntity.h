@@ -13,11 +13,9 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
-	int GetStressAmount() const { return StressAmount; }
+	float GetStressAmount() const { return StressAmount; }
 
-	void AddStress(float Sa);
-
-	void RemoveStress(float Sa);
+	void SetStressAmount(const float Sa);
 
 	void ResetStress() { StressAmount = 0.f; }
 
@@ -26,5 +24,6 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Stress")
 	float StressAmount;
 
-	const float Max_Stress = 100.f;
+	const float Max_Stress = 1.F;
+	const float Min_Stress = 0.F;
 };

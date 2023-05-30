@@ -14,6 +14,8 @@ class NOSIGNAL_API ANS_PointLight : public ANS_Light
 public:
 	ANS_PointLight();
 
+	UPointLightComponent* GetPointLightComponent() const { return PointLight; }
+
 protected:
 	virtual bool IsInSightOfPlayer(FHitResult& OutHit) override;
 

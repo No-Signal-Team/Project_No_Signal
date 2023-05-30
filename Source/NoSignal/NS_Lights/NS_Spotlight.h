@@ -14,6 +14,8 @@ class NOSIGNAL_API ANS_Spotlight : public ANS_Light
 public:
 	ANS_Spotlight();
 
+	USpotLightComponent* GetSpotlightComponent() const { return Spotlight; }
+
 protected:
 	virtual bool IsInSightOfPlayer(FHitResult& OutHit) override;
 

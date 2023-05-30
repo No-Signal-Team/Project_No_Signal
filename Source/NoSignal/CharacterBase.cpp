@@ -7,11 +7,15 @@
 #include <Engine/Classes/Components/CapsuleComponent.h>
 #include <Engine/Classes/GameFramework/CharacterMovementComponent.h>
 
+#include "Kismet/GameplayStatics.h"
+#include "NS_Lights/NS_PointLight.h"
+#include "NS_Lights/NS_Spotlight.h"
+
 // Sets default values
 ACharacterBase::ACharacterBase()
 	: WalkSpeed(200.0F), RunSpeed(800.0F)
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	cameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
@@ -32,7 +36,6 @@ ACharacterBase::ACharacterBase()
 void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void ACharacterBase::MoveForward(float axis)
@@ -60,10 +63,8 @@ void ACharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	UE_LOG(LogTemp, Warning, TEXT("Lights in sight: %i"), LightAwareEntityComponent->GetNbLightsInSight());
 	UpdateStressAmount(DeltaTime);
 	UpdateStressState();
-	
 }
 
 // Called to bind functionality to input
@@ -82,14 +83,38 @@ void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 }
 
-void ACharacterBase::UpdateStressAmount(float dt)
+void ACharacterBase::UpdateStressAmount(const float Dt)
 {
-	float stressFactor = 1 - LightAwareEntityComponent->GetNbLightsInSight() * 0.1F;
-	
+	float StressFactor = MaxStressFactor;
+
+	// For each light in sight, compute the stress factor.
+	// The stress factor is computed by the distance between the light and the character.
+	for (AActor* Light : LightAwareEntityComponent->GetLightsInSight())
+	{
+		FVector Distance = GetActorLocation() - Light->GetActorLocation();
+		float Slope = 0.0F;
+
+		if (const ANS_Spotlight* Sp = Cast<ANS_Spotlight>(Light))
+		{
+			Slope = 0.01F * (Distance.Length() - Sp->GetSpotlightComponent()->AttenuationRadius) * 0.01F;
+		}
+		else if (const ANS_PointLight* Pl = Cast<ANS_PointLight>(Light))
+		{
+			Slope = 0.01F * (Distance.Length() - Pl->GetPointLightComponent()->AttenuationRadius) * 0.01F;
+		}
+		else UE_LOG(LogTemp, Error, TEXT("Light type not supported"));
+		
+		StressFactor += Slope;
+	}
+
+	StressFactor = FMath::Clamp(StressFactor, MinStressFactor, MaxStressFactor);
+	StressFactor *= Dt;
+	StressInfluencedEntityComponent->SetStressAmount(StressFactor);
 }
 
 void ACharacterBase::UpdateStressState()
 {
-	// cameraComponent->PostProcessSettings.bOverride_SceneFringeIntensity = true;
-	cameraComponent->PostProcessSettings.SceneFringeIntensity += StressInfluencedEntityComponent->GetStressAmount();
+	cameraComponent->PostProcessSettings.bOverride_SceneFringeIntensity = true;
+	cameraComponent->PostProcessSettings.SceneFringeIntensity =
+		StressInfluencedEntityComponent->GetStressAmount() * MaxAberration;
 }
