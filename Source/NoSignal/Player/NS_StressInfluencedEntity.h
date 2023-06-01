@@ -2,6 +2,8 @@
 
 #include "NS_StressInfluencedEntity.generated.h"
 
+class UAudioComponent;
+
 UCLASS()
 class UNS_StressInfluencedEntity : public UActorComponent
 {
@@ -20,14 +22,11 @@ public:
 	void ResetStress() { StressAmount = 0.f; }
 
 protected:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stress")
-	USoundBase* StressSound;
-
-private:
-
-	UPROPERTY(VisibleAnywhere, Category = "Stress")
+	UPROPERTY(BlueprintReadOnly, Category = "Stress")
 	float StressAmount;
 
+private:
+	
 	const float Max_Stress = 1.F;
 	const float Min_Stress = 0.F;
 };
