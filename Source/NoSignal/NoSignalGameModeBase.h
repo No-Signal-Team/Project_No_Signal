@@ -13,5 +13,4 @@ UCLASS()
 class NOSIGNAL_API ANoSignalGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
 };
