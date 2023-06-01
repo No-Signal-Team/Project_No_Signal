@@ -60,6 +60,7 @@ private:
 
 	const float MaxStressFactor = 0.01F;
 	const float MinStressFactor = -0.04F;
-	const float MaxAberration = 5.F;
+	const float MaxAberration = 10.F;
+	const float MaxVignette = 2.F;
 	
 };
