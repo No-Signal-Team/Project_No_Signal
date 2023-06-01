@@ -58,8 +58,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	float RunSpeed;
 
-	const float MaxStressFactor = 0.1F;
-	const float MinStressFactor = -0.1F;
+	const float MaxStressFactor = 0.01F;
+	const float MinStressFactor = -0.04F;
 	const float MaxAberration = 5.F;
 	
 };

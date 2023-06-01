@@ -5,7 +5,7 @@
 class UAudioComponent;
 
 UCLASS()
-class UNS_StressInfluencedEntity : public UActorComponent
+class NOSIGNAL_API UNS_StressInfluencedEntity : public UActorComponent
 {
 	GENERATED_BODY()
 	
