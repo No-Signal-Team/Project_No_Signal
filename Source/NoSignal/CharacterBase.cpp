@@ -62,7 +62,7 @@ void ACharacterBase::EndSprint()
 void ACharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	UpdateStressAmount(DeltaTime);
 	UpdateStressState();
 }
