@@ -117,4 +117,8 @@ void ACharacterBase::UpdateStressState()
 	cameraComponent->PostProcessSettings.bOverride_SceneFringeIntensity = true;
 	cameraComponent->PostProcessSettings.SceneFringeIntensity =
 		StressInfluencedEntityComponent->GetStressAmount() * MaxAberration;
+
+	cameraComponent->PostProcessSettings.bOverride_VignetteIntensity = true;
+	cameraComponent->PostProcessSettings.VignetteIntensity =
+		StressInfluencedEntityComponent->GetStressAmount() * MaxVignette;
 }
