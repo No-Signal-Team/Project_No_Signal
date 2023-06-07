@@ -11,17 +11,21 @@ void ANS_Light::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// Get player character
-	ACharacter* UnrealCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	PlayerCharacter = Cast<ACharacterBase>(UnrealCharacter);
-
-	PlayerLightAwareEntityComponent = PlayerCharacter->LightAwareEntityComponent;
-	
 }
 
 void ANS_Light::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// TODO - This is a temporary solution, to be replaced with a more robust system
+	if (PlayerLightAwareEntityComponent == nullptr)
+	{
+		// Get player character
+		ACharacter* UnrealCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+		PlayerCharacter = Cast<ACharacterBase>(UnrealCharacter);
+
+		PlayerLightAwareEntityComponent = PlayerCharacter->LightAwareEntityComponent;
+	}
 
 	CompareToPlayer();
 }
